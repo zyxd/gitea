@@ -10,12 +10,23 @@ jobs:
           repository: 'go-gitea/gitea'
           ref: 'v1.20.2'
       
-      - name: Fetch latest release version
-        id: fetch-latest-release
-        uses: reloc8/action-latest-release-version@1.0.0
-
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: name/app
+      
       - name: Test
-        run: echo ${{ steps.fetch-latest-release.outputs.latest-release }}
+        run: |
+          echo ${{ steps.meta.outputs.tags }}
+          echo ${{ steps.meta.outputs.labels }}
+      
+#       - name: Fetch latest release version
+#         id: fetch-latest-release
+#         uses: reloc8/action-latest-release-version@1.0.0
+
+#       - name: Test
+#         run: echo ${{ steps.fetch-latest-release.outputs.latest-release }}
       
 #       - name: Set up QEMU
 #         uses: docker/setup-qemu-action@v2
