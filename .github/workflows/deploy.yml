@@ -10,12 +10,10 @@ jobs:
 #           repository: 'go-gitea/gitea'
 #           ref: 'v1.20.2'
       
-      - name: Fetch origin release version
-        run: |
-          curl -sL https://api.github.com/repos/go-gitea/gitea/releases/latest | \
-          jq -r ".tag_name" > release-versions/swagger-ui-latest.txt
+      - name: Origin version
+        run: curl -sL https://api.github.com/repos/go-gitea/gitea/releases/latest | jq -r ".tag_name"
       
-      - name: Fetch latest release version
+      - name: Local version
         id: fetch-latest-release
         uses: reloc8/action-latest-release-version@1.0.0
 
