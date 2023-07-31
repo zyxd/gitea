@@ -1,7 +1,7 @@
 name: Build and deploy docker image
 on: [push]
 jobs:
-  build-end-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
