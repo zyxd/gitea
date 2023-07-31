@@ -10,11 +10,10 @@ jobs:
           repository: 'go-gitea/gitea'
           ref: 'v1.20.2'
       
-      - name: Create tag artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{github.ref_name}}
-          path: Release
+      - name: GitHub Tag Name example
+        run: |
+         echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
+         echo "Tag name from github.ref_name: ${{  github.ref_name }}"
       
 #       - name: Set up QEMU
 #         uses: docker/setup-qemu-action@v2
