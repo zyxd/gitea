@@ -14,16 +14,14 @@ jobs:
       
       - name: Origin version
         id: origin-version
-        run: echo "{test}={`curl -sL $ORIGIN_URL | jq -r ".tag_name"`}" >> "$GITHUB_OUTPUT" 
+        run: echo "TEST=`curl -sL $ORIGIN_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT" 
       
-      - name: Local version
-        id: local-version
-        uses: reloc8/action-latest-release-version@1.0.0
+#       - name: Local version
+#         id: local-version
+#         uses: reloc8/action-latest-release-version@1.0.0
 
       - name: Test
-        run: |
-          echo ${{ steps.origin-version.outputs.test }}
-          echo ${{ steps.local-version.outputs.latest-release }}
+        run: echo ${{ steps.origin-version.outputs.TEST }}
       
 #       - name: Set up QEMU
 #         uses: docker/setup-qemu-action@v2
