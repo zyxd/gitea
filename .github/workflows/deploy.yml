@@ -2,38 +2,23 @@ name: Build and deploy docker image
 on: [push]
 env:
   ORIGIN_URL: https://api.github.com/repos/go-gitea/gitea/releases/latest
+  MIRROR_URL: https://api.github.com/repos/zyxd/gitea/releases/latest
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-#         with:
-#           repository: 'go-gitea/gitea'
-#           ref: 'v1.20.2'
-      
-#       - name: Origin version
-#         id: origin-version
-#         run: echo "TEST=`curl -sL $ORIGIN_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
-
-      - name: Check out origin repository
-        uses: actions/checkout@v3
-        with:
-          repository: 'go-gitea/gitea'
       - name: Origin version
         id: origin-version
-        uses: reloc8/action-latest-release-version@1.0.0
+        run: echo "VERSION=`curl -sL $ORIGIN_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
         
-      - name: Check out local repository
-        uses: actions/checkout@v3
-      - name: Local version
-        id: local-version
-        uses: reloc8/action-latest-release-version@1.0.0
+      - name: Origin version
+        id: mirror-version
+        run: echo "VERSION=`curl -sL $MIRROR_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
 
-      - name: Test
+      - name: Version
         run: |
-          echo ${{ steps.origin-version.outputs.latest-release }}
-          echo ${{ steps.local-version.outputs.latest-release }}
+          echo ${{ steps.origin-version.outputs.VERSION }}
+          echo ${{ steps.mirror-version.outputs.VERSION }}
       
 #       - name: Set up QEMU
 #         uses: docker/setup-qemu-action@v2
