@@ -1,5 +1,7 @@
 name: Build and deploy docker image
 on: [push]
+env:
+  ORIGIN_URL: https://api.github.com/repos/go-gitea/gitea/releases/latest
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -12,7 +14,7 @@ jobs:
       
       - name: Origin version
         id: origin-version
-        run: curl -sL https://api.github.com/repos/go-gitea/gitea/releases/latest | jq -r ".tag_name"
+        run: echo "{test}={`curl -sL $ORIGIN_URL | jq -r ".tag_name"`}" >> "$GITHUB_OUTPUT" 
       
       - name: Local version
         id: local-version
@@ -20,7 +22,7 @@ jobs:
 
       - name: Test
         run: |
-          echo ${{ steps.origin-version.outputs.latest-release }}
+          echo ${{ steps.origin-version.outputs.test }}
           echo ${{ steps.local-version.outputs.latest-release }}
       
 #       - name: Set up QEMU
