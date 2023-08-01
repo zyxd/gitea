@@ -11,8 +11,8 @@ jobs:
         id: latest_tag
         uses: jacobtomlinson/gha-get-docker-hub-tags@0.1.1
         with:
-          org: 'mysql'
-          repo: 'mysql-server'
+          org: 'gitea'
+          repo: 'gitea'
 
       - name: Check outputs
         run: |
