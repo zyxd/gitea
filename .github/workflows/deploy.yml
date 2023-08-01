@@ -12,16 +12,28 @@ jobs:
 #           repository: 'go-gitea/gitea'
 #           ref: 'v1.20.2'
       
+#       - name: Origin version
+#         id: origin-version
+#         run: echo "TEST=`curl -sL $ORIGIN_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
+
+      - name: Check out origin repository
+        uses: actions/checkout@v3
+        with:
+          repository: 'go-gitea/gitea'
       - name: Origin version
         id: origin-version
-        run: echo "TEST=`curl -sL $ORIGIN_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT" 
-      
-#       - name: Local version
-#         id: local-version
-#         uses: reloc8/action-latest-release-version@1.0.0
+        uses: reloc8/action-latest-release-version@1.0.0
+        
+      - name: Check out local repository
+        uses: actions/checkout@v3
+      - name: Local version
+        id: local-version
+        uses: reloc8/action-latest-release-version@1.0.0
 
       - name: Test
-        run: echo ${{ steps.origin-version.outputs.TEST }}
+        run: |
+          echo ${{ steps.origin-version.outputs.latest-release }}
+          echo ${{ steps.local-version.outputs.latest-release }}
       
 #       - name: Set up QEMU
 #         uses: docker/setup-qemu-action@v2
