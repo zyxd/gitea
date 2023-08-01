@@ -7,16 +7,19 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Get latest tag
-        id: latest_tag
-        uses: jacobtomlinson/gha-get-docker-hub-tags@0.1.1
+      - name: Check image
+        id: image_exists
+        uses: cloudposse/github-action-docker-image-exists@main
         with:
-          org: 'gitea'
-          repo: 'gitea'
-
-      - name: Check outputs
+          registry: registry.hub.docker.com
+          organization: gitea
+          repository: gitea
+          tag: latest
+      
+      - name: Version
         run: |
-          echo "Latest Image Tag - ${{ steps.latest_tag.outputs.tag }}"
+          echo ${{ steps.image_exists.outputs.image }}
+          echo ${{ steps.image_exists.outputs.tag }}
       
 #       - name: Check origin version
 #         id: origin-version
