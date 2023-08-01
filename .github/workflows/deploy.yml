@@ -14,12 +14,10 @@ jobs:
           registry: registry.hub.docker.com
           organization: gitea
           repository: gitea
-          tag: latest
+          tag: shit
       
       - name: Version
-        run: |
-          echo ${{ steps.image_exists.outputs.image }}
-          echo ${{ steps.image_exists.outputs.tag }}
+        run: echo ${{ steps.image_exists.outputs.tag }}
       
 #       - name: Check origin version
 #         id: origin-version
