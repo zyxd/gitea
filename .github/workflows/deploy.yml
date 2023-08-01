@@ -7,23 +7,34 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Check origin version
-        id: origin-version
-        run: echo "VERSION=`curl -sL $ORIGIN_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
-        
-      - name: Check mirror version
-        id: mirror-version
-        run: echo "VERSION=`curl -sL $MIRROR_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
-
-      - name: Version
-        run: |
-          echo ${{ steps.origin-version.outputs.VERSION }}
-          echo ${{ steps.mirror-version.outputs.VERSION }}
-      
-      - name: Release
-        uses: softprops/action-gh-release@v1
+      - name: Get latest tag
+        id: latest_tag
+        uses: jacobtomlinson/gha-get-docker-hub-tags@0.1.1
         with:
-          tag_name: ${{ steps.origin-version.outputs.VERSION }}
+          org: 'mysql'
+          repo: 'mysql-server'
+
+      - name: Check outputs
+        run: |
+          echo "Latest Image Tag - ${{ steps.latest_tag.outputs.tag }}"
+      
+#       - name: Check origin version
+#         id: origin-version
+#         run: echo "VERSION=`curl -sL $ORIGIN_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
+        
+#       - name: Check mirror version
+#         id: mirror-version
+#         run: echo "VERSION=`curl -sL $MIRROR_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
+
+#       - name: Version
+#         run: |
+#           echo ${{ steps.origin-version.outputs.VERSION }}
+#           echo ${{ steps.mirror-version.outputs.VERSION }}
+      
+#       - name: Release
+#         uses: softprops/action-gh-release@v1
+#         with:
+#           tag_name: ${{ steps.origin-version.outputs.VERSION }}
       
 #       - name: Set up QEMU
 #         uses: docker/setup-qemu-action@v2
