@@ -7,11 +7,11 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Origin version
+      - name: Check origin version
         id: origin-version
         run: echo "VERSION=`curl -sL $ORIGIN_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
         
-      - name: Origin version
+      - name: Check mirror version
         id: mirror-version
         run: echo "VERSION=`curl -sL $MIRROR_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
 
@@ -19,6 +19,11 @@ jobs:
         run: |
           echo ${{ steps.origin-version.outputs.VERSION }}
           echo ${{ steps.mirror-version.outputs.VERSION }}
+      
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.origin-version.outputs.VERSION }}
       
 #       - name: Set up QEMU
 #         uses: docker/setup-qemu-action@v2
