@@ -11,14 +11,17 @@ jobs:
 #           ref: 'v1.20.2'
       
       - name: Origin version
+        id: origin-version
         run: curl -sL https://api.github.com/repos/go-gitea/gitea/releases/latest | jq -r ".tag_name"
       
       - name: Local version
-        id: fetch-latest-release
+        id: local-version
         uses: reloc8/action-latest-release-version@1.0.0
 
       - name: Test
-        run: echo ${{ steps.fetch-latest-release.outputs.latest-release }}
+        run: |
+          echo ${{ steps.origin-version.outputs.latest-release }}
+          echo ${{ steps.local-version.outputs.latest-release }}
       
 #       - name: Set up QEMU
 #         uses: docker/setup-qemu-action@v2
