@@ -10,20 +10,15 @@ jobs:
       - name: Check origin version
         id: origin-version
         run: echo "VERSION=`curl -sL $ORIGIN_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
-      
-#       - name: Check mirror version
-#         id: mirror-version
-#         run: echo "VERSION=`curl -sL $MIRROR_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
 
       - name: Version
-        run: |
-          echo ${{ steps.origin-version.outputs.VERSION }}
-#           echo ${{ steps.mirror-version.outputs.VERSION }}
-      
-#       - name: Release
-#         uses: softprops/action-gh-release@v1
-#         with:
-#           tag_name: ${{ steps.origin-version.outputs.VERSION }}
+        run: echo ${{ steps.origin-version.outputs.VERSION }}
+
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          repository: 'go-gitea/gitea'
+          ref: ${{ steps.origin-version.outputs.VERSION }}
       
 #       - name: Set up QEMU
 #         uses: docker/setup-qemu-action@v2
