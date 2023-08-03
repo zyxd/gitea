@@ -44,4 +44,4 @@ jobs:
           context: .
           platforms: linux/386,linux/arm,linux/arm/v6
           push: true
-          tags: zyxd/gitea:${{ steps.docker-tag.outputs.TAG }}
+          tags: zyxd/gitea:latest,zyxd/gitea:${{ steps.docker-tag.outputs.TAG }}
