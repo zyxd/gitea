@@ -7,29 +7,17 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Check image
-        id: image_exists
-        uses: cloudposse/github-action-docker-image-exists@main
-        with:
-          registry: registry.hub.docker.com
-          organization: gitea
-          repository: gitea
-          tag: shit
+      - name: Check origin version
+        id: origin-version
+        run: echo "VERSION=`curl -sL $ORIGIN_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
       
-      - name: Version
-        run: echo ${{ steps.image_exists.outputs.tag }}
-      
-#       - name: Check origin version
-#         id: origin-version
-#         run: echo "VERSION=`curl -sL $ORIGIN_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
-        
 #       - name: Check mirror version
 #         id: mirror-version
 #         run: echo "VERSION=`curl -sL $MIRROR_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
 
-#       - name: Version
-#         run: |
-#           echo ${{ steps.origin-version.outputs.VERSION }}
+      - name: Version
+        run: |
+          echo ${{ steps.origin-version.outputs.VERSION }}
 #           echo ${{ steps.mirror-version.outputs.VERSION }}
       
 #       - name: Release
