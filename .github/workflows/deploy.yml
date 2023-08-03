@@ -7,18 +7,24 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Check origin version
-        id: origin-version
-        run: echo "VERSION=`curl -sL $ORIGIN_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
+      - name: Set github tag
+        id: github-tag
+        run: echo "TAG=`curl -sL $ORIGIN_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
+    
+      - name: Set docker tag
+        id: docker-tag
+        run: echo "TAG=`echo ${{ steps.github-tag.outputs.TAG }} | sed 's/^v//'`" >> "$GITHUB_OUTPUT"
 
-      - name: Version
-        run: echo ${{ steps.origin-version.outputs.VERSION }}
+      - name: Print
+        run: |
+          echo ${{ steps.github-tag.outputs.TAG }}
+          echo ${{ steps.docker-tag.outputs.TAG }}
 
-      - name: Check out repository code
-        uses: actions/checkout@v3
-        with:
-          repository: 'go-gitea/gitea'
-          ref: ${{ steps.origin-version.outputs.VERSION }}
+#       - name: Check out repository code
+#         uses: actions/checkout@v3
+#         with:
+#           repository: 'go-gitea/gitea'
+#           ref: ${{ steps.origin-version.outputs.TAG }}
       
 #       - name: Set up QEMU
 #         uses: docker/setup-qemu-action@v2
@@ -36,6 +42,6 @@ jobs:
 #         uses: docker/build-push-action@v4
 #         with:
 #           context: .
-#           platforms: linux/amd64,linux/386,linux/arm64,linux/arm,linux/arm/v6
+#           platforms: linux/386,linux/arm,linux/arm/v6
 #           push: true
 #           tags: zyxd/gitea:latest
