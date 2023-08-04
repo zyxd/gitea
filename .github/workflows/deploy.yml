@@ -43,6 +43,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          platforms: linux/amd64,linux/386,linux/arm64,linux/arm,linux/arm/v6
+          platforms: linux/arm64v8,linux/arm32v7,linux/arm32v6,linux/amd64,linux/i386
           push: true
           tags: zyxd/gitea:latest,zyxd/gitea:${{ steps.docker-tag.outputs.TAG }}
