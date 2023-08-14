@@ -23,7 +23,8 @@ jobs:
           echo "docker tag: ${{ steps.docker-tag.outputs.TAG }}"
 
       - name: Test
-        if: curl --silent -f -lSL https://hub.docker.com/v2/repositories/zyxd/gitea/tags/${{ steps.docker-tag.outputs.TAG }}
+        # if: curl --silent -f -lSL https://hub.docker.com/v2/repositories/zyxd/gitea/tags/${{ steps.docker-tag.outputs.TAG }}
+        if: curl --silent -f -lSL https://hub.docker.com/v2/repositories/zyxd/gitea/tags/123
         run: echo success
 
       # - name: Check out repository code
