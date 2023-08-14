@@ -4,7 +4,7 @@ name: Build and deploy docker image
 #     - cron: "30 17 * * *"
 on: [push]
 env:
-  ORIGIN_URL: https://api.github.com/repos/go-gitea/gitea/releases/latest
+  GITHUB_URL: https://api.github.com/repos/go-gitea/gitea/releases/latest
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -14,17 +14,22 @@ jobs:
     steps:
       - name: Set github tag
         id: github-tag
-        run: echo "tag=`curl -sL $ORIGIN_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
+        run: echo "tag=`curl -sL $GITHUB_URL | jq -r ".tag_name"`" >> "$GITHUB_OUTPUT"
     
       - name: Set docker tag
         id: docker-tag
         run: echo "tag=`echo ${{ steps.github-tag.outputs.TAG }} | sed 's/^v//'`" >> "$GITHUB_OUTPUT"
 
-      # - name: Check docker tag already exists
-      #   uses: indiesdev/curl@v1.1
-      #   with:
-      #     url: https://hub.docker.com/v2/repositories/zyxd/gitea/tags/${{ steps.docker-tag.outputs.TAG }}
-      #     accept: 404
+      - name: Test
+        shell: bash
+        env:
+          DOCKER_URL: https://hub.docker.com/v2/repositories/zyxd/gitea/tags/${{ steps.docker-tag.outputs.TAG }}
+        run: |
+         if [ `curl --silent -f -lSL $DOCKER_URL ]; then
+           echo "Success"
+         else
+           echo "Failed"
+         fi
 
   deploy:
     runs-on: ubuntu-latest
