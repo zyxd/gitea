@@ -20,11 +20,11 @@ jobs:
         id: docker-tag
         run: echo "tag=`echo ${{ steps.github-tag.outputs.TAG }} | sed 's/^v//'`" >> "$GITHUB_OUTPUT"
 
-      - name: Check docker tag already exists
-        uses: indiesdev/curl@v1.1
-        with:
-          url: https://hub.docker.com/v2/repositories/zyxd/gitea/tags/${{ steps.docker-tag.outputs.TAG }}
-          accept: 404
+      # - name: Check docker tag already exists
+      #   uses: indiesdev/curl@v1.1
+      #   with:
+      #     url: https://hub.docker.com/v2/repositories/zyxd/gitea/tags/${{ steps.docker-tag.outputs.TAG }}
+      #     accept: 404
 
   shit:
     runs-on: ubuntu-latest
