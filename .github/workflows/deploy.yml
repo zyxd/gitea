@@ -22,21 +22,11 @@ jobs:
           echo "github tag: ${{ steps.github-tag.outputs.TAG }}"
           echo "docker tag: ${{ steps.docker-tag.outputs.TAG }}"
 
-      - name: Test
-        # if: curl --silent -f -lSL https://hub.docker.com/v2/repositories/zyxd/gitea/tags/${{ steps.docker-tag.outputs.TAG }}
-        shell: bash
-        run: |
-          if [ `curl --silent -f -lSL https://hub.docker.com/v2/repositories/zyxd/gitea/tags/${{ steps.docker-tag.outputs.TAG }}` ]; then
-            echo "Success"
-          else
-            echo "Failed"
-          fi
-
       - name: Check docker tag already exists
         uses: indiesdev/curl@v1.1
         with:
           url: https://hub.docker.com/v2/repositories/zyxd/gitea/tags/${{ steps.docker-tag.outputs.TAG }}
-          accept: 200
+          accept: 404
 
       # - name: Check out repository code
       #   uses: actions/checkout@v3
