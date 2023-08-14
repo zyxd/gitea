@@ -26,10 +26,10 @@ jobs:
       #     url: https://hub.docker.com/v2/repositories/zyxd/gitea/tags/${{ steps.docker-tag.outputs.TAG }}
       #     accept: 404
 
-  shit:
+  deploy:
     runs-on: ubuntu-latest
     needs: check
-    if: ${{ needs.check.outputs.github-tag == 'v1.20.1' }}
+    if: ${{ needs.check.outputs.github-tag == 'v1.20.2' }}
     steps:
       - name: Test
         run: |
