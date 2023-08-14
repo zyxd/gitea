@@ -24,6 +24,7 @@ jobs:
 
       - name: Test
         if: curl --silent -f -lSL https://hub.docker.com/v2/repositories/zyxd/gitea/tags/${{ steps.docker-tag.outputs.TAG }}
+        run: echo success
 
       # - name: Check out repository code
       #   uses: actions/checkout@v3
