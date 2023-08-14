@@ -1,8 +1,7 @@
 name: Build and deploy docker image
-# on:
-#   schedule:
-#     - cron: "30 17 * * *"
-on: [push]
+on:
+  schedule:
+    - cron: "30 12 * * *"
 env:
   GITHUB_URL: https://api.github.com/repos/go-gitea/gitea/releases/latest
 jobs:
