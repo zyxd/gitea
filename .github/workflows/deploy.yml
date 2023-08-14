@@ -32,6 +32,12 @@ jobs:
             echo "Failed"
           fi
 
+      - name: Check docker tag already exists
+        uses: indiesdev/curl@v1.1
+        with:
+          url: https://hub.docker.com/v2/repositories/zyxd/gitea/tags/${{ steps.docker-tag.outputs.TAG }}
+          accept: 200
+
       # - name: Check out repository code
       #   uses: actions/checkout@v3
       #   with:
