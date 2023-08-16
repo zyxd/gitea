@@ -10,7 +10,8 @@ jobs:
     outputs:
       github-tag: ${{ steps.github-tag.outputs.tag }}
       docker-tag: ${{ steps.docker-tag.outputs.tag }}
-      docker-exists: ${{ steps.docker-exists.outputs.exists }}
+      docker-exists-normal: ${{ steps.docker-exists-normal.outputs.exists }}
+      docker-exists-rootless: ${{ steps.docker-exists-rootless.outputs.exists }}
     steps:
       - name: Check github tag
         id: github-tag
@@ -20,8 +21,8 @@ jobs:
         id: docker-tag
         run: echo "tag=`echo ${{ steps.github-tag.outputs.TAG }} | sed 's/^v//'`" >> "$GITHUB_OUTPUT"
 
-      - name: Check if docker image already exists
-        id: docker-exists
+      - name: Check that docker normal image already exists
+        id: docker-exists-normal
         shell: bash
         env:
           DOCKER_URL: https://hub.docker.com/v2/repositories/zyxd/gitea/tags/${{ steps.docker-tag.outputs.TAG }}
@@ -32,10 +33,22 @@ jobs:
            echo "exists=false" >> "$GITHUB_OUTPUT"
          fi
 
-  deploy:
+      - name: Check that docker rootless image already exists
+        id: docker-exists-rootless
+        shell: bash
+        env:
+          DOCKER_URL: https://hub.docker.com/v2/repositories/zyxd/gitea/tags/${{ steps.docker-tag.outputs.TAG }}-rootless
+        run: |
+         if [ `curl --silent -f -lSL $DOCKER_URL` ]; then
+           echo "exists=true" >> "$GITHUB_OUTPUT"
+         else
+           echo "exists=false" >> "$GITHUB_OUTPUT"
+         fi
+
+  build-normal:
     runs-on: ubuntu-latest
     needs: check
-    if: ${{ needs.check.outputs.docker-exists == 'false' }}
+    if: ${{ needs.check.outputs.docker-exists-normal == 'false' }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
@@ -59,6 +72,39 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
+          file: "{context}/Dockerfile"
           platforms: linux/arm64,linux/arm/v7,linux/arm/v6,linux/amd64,linux/i386
           push: true
           tags: zyxd/gitea:latest,zyxd/gitea:${{ needs.check.outputs.docker-tag }}
+
+  build-rootless:
+    runs-on: ubuntu-latest
+    needs: check
+    if: ${{ needs.check.outputs.docker-exists-rootless == 'false' }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          repository: 'go-gitea/gitea'
+          ref: ${{ needs.check.outputs.github-tag }}
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: "{context}/Dockerfile.rootless"
+          platforms: linux/arm64,linux/arm/v7,linux/arm/v6,linux/amd64,linux/i386
+          push: true
+          tags: zyxd/gitea:latest-rootless,zyxd/gitea:${{ needs.check.outputs.docker-tag }}-rootless
