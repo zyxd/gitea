@@ -72,7 +72,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: "{context}/Dockerfile"
+          file: Dockerfile
           platforms: linux/arm64,linux/arm/v7,linux/arm/v6,linux/amd64,linux/i386
           push: true
           tags: zyxd/gitea:latest,zyxd/gitea:${{ needs.check.outputs.docker-tag }}
@@ -104,7 +104,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: "{context}/Dockerfile.rootless"
+          file: Dockerfile.rootless
           platforms: linux/arm64,linux/arm/v7,linux/arm/v6,linux/amd64,linux/i386
           push: true
           tags: zyxd/gitea:latest-rootless,zyxd/gitea:${{ needs.check.outputs.docker-tag }}-rootless
