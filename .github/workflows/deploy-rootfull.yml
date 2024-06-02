@@ -1,4 +1,4 @@
-name: Build and deploy docker image
+name: Docker image - rootfull
 
 on:
   workflow_dispatch:
