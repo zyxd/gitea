@@ -9,7 +9,7 @@ env:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       github-tag: ${{ steps.github-tag.outputs.tag }}
       docker-tag: ${{ steps.docker-tag.outputs.tag }}
@@ -49,7 +49,7 @@ jobs:
          fi
   
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - check
     if: ${{ needs.check.outputs.docker-exists-normal == 'false' }}
@@ -116,7 +116,7 @@ jobs:
           retention-days: 1
 
   merge:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - build
     steps:
