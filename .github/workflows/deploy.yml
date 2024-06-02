@@ -7,7 +7,7 @@ env:
   GITHUB_URL: https://api.github.com/repos/go-gitea/gitea/releases/latest
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       github-tag: ${{ steps.github-tag.outputs.tag }}
       docker-tag: ${{ steps.docker-tag.outputs.tag }}
@@ -47,7 +47,7 @@ jobs:
          fi
 
   build-normal:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: check
     if: ${{ needs.check.outputs.docker-exists-normal == 'false' }}
     steps:
@@ -82,7 +82,7 @@ jobs:
           tags: zyxd/gitea:latest,zyxd/gitea:${{ needs.check.outputs.docker-tag }}
 
   build-rootless:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: check
     if: ${{ needs.check.outputs.docker-exists-rootless == 'false' }}
     steps:
